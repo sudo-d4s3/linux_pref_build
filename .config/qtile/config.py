@@ -23,14 +23,16 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+import os, shutil, subprocess
 
-from libqtile import bar, layout, widget
+from libqtile import bar, layout, widget, hook
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
 from libqtile.lazy import lazy
 from libqtile.utils import guess_terminal
 
 mod = "mod4"
-terminal = guess_terminal()
+alt = "mod1"
+terminal = "kitty"
 
 keys = [
     # A list of available commands that can be bound to keys can be found
@@ -49,10 +51,10 @@ keys = [
     Key([mod, "shift"], "k", lazy.layout.shuffle_up(), desc="Move window up"),
     # Grow windows. If current window is on the edge of screen and direction
     # will be to screen edge - window would shrink.
-    Key([mod, "control"], "h", lazy.layout.grow_left(), desc="Grow window to the left"),
-    Key([mod, "control"], "l", lazy.layout.grow_right(), desc="Grow window to the right"),
-    Key([mod, "control"], "j", lazy.layout.grow_down(), desc="Grow window down"),
-    Key([mod, "control"], "k", lazy.layout.grow_up(), desc="Grow window up"),
+    Key([mod, alt], "h", lazy.layout.grow_left(), desc="Grow window to the left"),
+    Key([mod, alt], "l", lazy.layout.grow_right(), desc="Grow window to the right"),
+    Key([mod, alt], "j", lazy.layout.grow_down(), desc="Grow window down"),
+    Key([mod, alt], "k", lazy.layout.grow_up(), desc="Grow window up"),
     Key([mod], "n", lazy.layout.normalize(), desc="Reset all window sizes"),
     # Toggle between split and unsplit sides of stack.
     # Split = all windows displayed
@@ -116,33 +118,61 @@ layouts = [
 ]
 
 widget_defaults = dict(
-    font="hack",
+    font="Hack",
     fontsize=12,
     padding=3,
 )
 extension_defaults = widget_defaults.copy()
 
+colors = [["#282c34", "#282c34"],
+          ["#1c1f24", "#1c1f24"],
+          ["#dfdfdf", "#dfdfdf"],
+          ["#ff6c6b", "#ff6c6b"],
+          ["#98be65", "#98be65"],
+          ["#da8548", "#da8548"],
+          ["#51afef", "#51afef"],
+          ["#c678dd", "#c678dd"],
+          ["#46d9ff", "#46d9ff"],
+          ["#a9a1e1", "#a9a1e1"]]
+
 screens = [
     Screen(
-        bottom=bar.Bar(
+        top=bar.Bar(
             [
-                widget.CurrentLayout(),
-                widget.GroupBox(),
-                widget.Prompt(),
-                widget.WindowName(),
-                widget.Chord(
-                    chords_colors={
-                        "launch": ("#ff0000", "#ffffff"),
-                    },
-                    name_transform=lambda name: name.upper(),
-                ),
-                widget.TextBox("default config", name="default"),
-                widget.TextBox("Press &lt;M-r&gt; to spawn", foreground="#d75f5f"),
-                # NB Systray is incompatible with Wayland, consider using StatusNotifier instead
-                # widget.StatusNotifier(),
-                widget.Systray(),
-                widget.Clock(format="%Y-%m-%d %a %I:%M %p"),
-                widget.QuickExit(),
+                widget.Sep(linewidth=0,padding=6, foreground=colors[2], background=colors[0]),
+                widget.GroupBox(
+                         fontsize = 9,
+                         margin_y = 3,
+                         margin_x = 0,
+                         padding_y = 5,
+                         padding_x = 3,
+                         borderwidth = 3,
+                         active = colors[2],
+                         inactive = colors[7],
+                         rounded = False,
+                         highlight_color = colors[1],
+                         highlight_method = "line",
+                         this_current_screen_border = colors[6],
+                         this_screen_border = colors [4],
+                         other_current_screen_border = colors[6],
+                         other_screen_border = colors[4],
+                         foreground = colors[2],
+                         background = colors[0]
+                         ),
+                widget.Sep(linewidth=0,padding=6, foreground=colors[0], background=colors[0]),
+                widget.TextBox(text = '|', background=colors[0],foreground='474747'),
+                widget.Sep(linewidth=0,padding=6, foreground=colors[0], background=colors[0]),
+                
+                widget.WindowName(foreground=colors[6],background=colors[0]),
+
+                widget.TextBox(text='\ue0b2',background=colors[0],foreground=colors[8],padding=0,fontsize=37),
+                widget.CurrentLayoutIcon(background=colors[8],padding=0,scale=0.7),
+                widget.CurrentLayout(foreground='000000',background=colors[8],padding=0,scale=0.7),
+
+                widget.TextBox(text='\ue0b2',background=colors[8],foreground=colors[9],padding=0,fontsize=37),
+                widget.Clock(foreground='000000', background=colors[9], format = "%d-%m-%y %H:%M"),
+                #widget.Sep(linewidth=0,padding=6,foreground=colors[0],background=colors[0]),
+
             ],
             24,
             # border_width=[2, 0, 2, 0],  # Draw top and bottom borders
@@ -179,6 +209,22 @@ auto_fullscreen = True
 focus_on_window_activation = "smart"
 reconfigure_screens = True
 
+
+@hook.subscribe.restart
+def cleanup():
+    shutil.rmtree(os.path.expanduser('~/.config/qtile/__pycache__'))
+
+@hook.subscribe.shutdown
+def killall():
+    shutil.rmtree(os.path.expanduser('~/.config/qtile/__pycache__'))
+    subprocess.Popen(['killall','kitty'])
+
+@hook.subscribe.startup_once
+def start_once():
+    home = os.path.exanduser('~')
+    subprocess.call([home + '/.config/qtile/autostart.sh'])
+
+
 # If things like steam games want to auto-minimize themselves when losing
 # focus, should we respect this or not?
 auto_minimize = True
@@ -194,4 +240,4 @@ wl_input_rules = None
 #
 # We choose LG3D to maximize irony: it is a 3D non-reparenting WM written in
 # java that happens to be on java's whitelist.
-wmname = "LG3D"
+wmname = "qtile"

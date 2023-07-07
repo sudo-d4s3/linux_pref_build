@@ -31,7 +31,7 @@ _datadir=\${XDG_DATA_HOME:-\$HOME/.local/share}/bash
 # Source settings file
 if [ -d "\$_confdir" ] then
     for f in .bash_profile .bashrc; do
-        [ -f "\$_confdir/$f" ] && . "\$_confdir/\$f"
+        [ -f "\$_confdir/\$f" ] && . "\$_confdir/\$f"
     done
 fi
 
