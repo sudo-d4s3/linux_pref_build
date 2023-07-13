@@ -28,7 +28,6 @@ import os, shutil, subprocess
 from libqtile import bar, layout, widget, hook
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
 from libqtile.lazy import lazy
-from libqtile.utils import guess_terminal
 
 mod = "mod4"
 alt = "mod1"
@@ -69,41 +68,37 @@ keys = [
     Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
     # Toggle between different layouts as defined below
     Key([mod], "Tab", lazy.next_layout(), desc="Toggle between layouts"),
-    Key([mod], "w", lazy.window.kill(), desc="Kill focused window"),
+    Key([mod, "shift"], "q", lazy.window.kill(), desc="Kill focused window"),
     Key([mod, "control"], "r", lazy.reload_config(), desc="Reload the config"),
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
     Key([mod], "r", lazy.spawncmd(), desc="Spawn a command using a prompt widget"),
 ]
 
-groups = [Group(i) for i in "123456789"]
+groups = [                                                                                                             
+        Group("WWW", layout = "max"),                                                                                  
+        Group("DOC", layout = "treetab"),                                                                              
+        Group("DEV", layout = "monadthreecol"),                                                                        
+        Group("TERM", layout = "monadthreecol"),                                                                       
+        Group("EXT1", layout = "tile"),                                                                                
+        Group("EXT2", layout = "tile"),                                                                                
+        Group("EXT3", layout = "tile"),                                                                                
+        Group("EXT4", layout = "tile"),                                                                                
+        Group("EXT5", layout = "tile"),                                                                                
+        Group("EXT6", layout = "tile")]                                                                                
+                                                                                                                       
+# I couldn't get this working                                                                                          
+# from libqtile.dgroups import simple_key_binder                                                                       
+# dgroups_key_binder = simple_key_binder(mod)                                                                          
+                                                                                                                       
+for k, group in zip(["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"], groups):                                       
+    keys.append(Key([mod], k, lazy.group[group.name].toscreen()))                                                      
+    keys.append(Key([mod, "shift"], k, lazy.window.togroup(group.name)))
 
-for i in groups:
-    keys.extend(
-        [
-            # mod1 + letter of group = switch to group
-            Key(
-                [mod],
-                i.name,
-                lazy.group[i.name].toscreen(),
-                desc="Switch to group {}".format(i.name),
-            ),
-            # mod1 + shift + letter of group = switch to & move focused window to group
-            Key(
-                [mod, "shift"],
-                i.name,
-                lazy.window.togroup(i.name, switch_group=True),
-                desc="Switch to & move focused window to group {}".format(i.name),
-            ),
-            # Or, use below if you prefer not to switch to that group.
-            # # mod1 + shift + letter of group = move focused window to group
-            # Key([mod, "shift"], i.name, lazy.window.togroup(i.name),
-            #     desc="move focused window to group {}".format(i.name)),
-        ]
-    )
 
 layouts = [
     layout.Columns(border_focus_stack=["#d75f5f", "#8f3d3d"], border_width=4),
     layout.Max(),
+    layout.MonadThreeCol(),
     # Try more layouts by unleashing below layouts.
     # layout.Stack(num_stacks=2),
     # layout.Bsp(),
@@ -111,8 +106,8 @@ layouts = [
     # layout.MonadTall(),
     # layout.MonadWide(),
     # layout.RatioTile(),
-    # layout.Tile(),
-    # layout.TreeTab(),
+    layout.Tile(),
+    layout.TreeTab(),
     # layout.VerticalTile(),
     # layout.Zoomy(),
 ]
@@ -165,11 +160,11 @@ screens = [
                 
                 widget.WindowName(foreground=colors[6],background=colors[0]),
 
-                widget.TextBox(text='\ue0b2',background=colors[0],foreground=colors[8],padding=0,fontsize=37),
+                widget.TextBox(text='\ue0b2',background=colors[0],foreground=colors[8],padding=0,fontsize=30),
                 widget.CurrentLayoutIcon(background=colors[8],padding=0,scale=0.7),
                 widget.CurrentLayout(foreground='000000',background=colors[8],padding=0,scale=0.7),
 
-                widget.TextBox(text='\ue0b2',background=colors[8],foreground=colors[9],padding=0,fontsize=37),
+                widget.TextBox(text='\ue0b2',background=colors[8],foreground=colors[9],padding=0,fontsize=30),
                 widget.Clock(foreground='000000', background=colors[9], format = "%d-%m-%y %H:%M"),
                 #widget.Sep(linewidth=0,padding=6,foreground=colors[0],background=colors[0]),
 
@@ -221,7 +216,7 @@ def killall():
 
 @hook.subscribe.startup_once
 def start_once():
-    home = os.path.exanduser('~')
+    home = os.path.expanduser('~')
     subprocess.call([home + '/.config/qtile/autostart.sh'])
 
 
