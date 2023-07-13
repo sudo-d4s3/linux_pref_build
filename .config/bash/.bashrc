@@ -53,5 +53,8 @@ source $HOME/git/linux_pref_build/shell_scripts/bashrc_functions/git-functions.s
 export PATH=$HOME/.nimble/bin:$PATH
 export PATH=$HOME/.local/bin:$PATH
 
+# XDG env vars
+source $HOME/git/linux_pref_build/shell_scripts/xdg_env.sh
+
 # Prompt
 export PS1=$(printf "%*s\r%s\n\$ " "$(tput cols)" "\t \$?\[$(tput sgr0)\]" "\u@\h:\w\$(git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/')\[$(tput sgr0)\]") 

@@ -10,3 +10,6 @@ alias ip="ip --color=auto"
 # ls aliases
 alias ll='ls -avlhF'
 alias ...='pushd ../..'
+
+# making wget a bit more xdg compliant
+wget --hsts-file="$XDG_CACHE_HOME/wget-hsts"
