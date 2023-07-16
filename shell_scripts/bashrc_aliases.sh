@@ -12,4 +12,4 @@ alias ll='ls -avlhF'
 alias ...='pushd ../..'
 
 # making wget a bit more xdg compliant
-wget --hsts-file="$XDG_CACHE_HOME/wget-hsts"
+alias wget='wget --hsts-file="$XDG_CACHE_HOME/wget-hsts"'

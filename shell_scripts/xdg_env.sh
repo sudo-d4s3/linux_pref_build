@@ -16,5 +16,3 @@ export GOMODCACHE="$XDG_CACHE_HOME"/go/mod
 
 export PYTHONPYCACHEPREFIX=$XDG_CACHE_HOME/python
 export PYTHONUSERBASE=$XDG_DATA_HOME/python
-
-export XDG_CONFIG_HOME/git/config 
