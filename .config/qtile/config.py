@@ -50,10 +50,10 @@ keys = [
     Key([mod, "shift"], "k", lazy.layout.shuffle_up(), desc="Move window up"),
     # Grow windows. If current window is on the edge of screen and direction
     # will be to screen edge - window would shrink.
-    Key([mod, alt], "h", lazy.layout.grow_left(), desc="Grow window to the left"),
-    Key([mod, alt], "l", lazy.layout.grow_right(), desc="Grow window to the right"),
-    Key([mod, alt], "j", lazy.layout.grow_down(), desc="Grow window down"),
-    Key([mod, alt], "k", lazy.layout.grow_up(), desc="Grow window up"),
+    Key([mod, "control"], "h", lazy.layout.grow_left(), desc="Grow window to the left"),
+    Key([mod, "control"], "l", lazy.layout.grow_right(), desc="Grow window to the right"),
+    Key([mod, "control"], "j", lazy.layout.grow_down(), desc="Grow window down"),
+    Key([mod, "control"], "k", lazy.layout.grow_up(), desc="Grow window up"),
     Key([mod], "n", lazy.layout.normalize(), desc="Reset all window sizes"),
     # Toggle between split and unsplit sides of stack.
     # Split = all windows displayed
@@ -134,45 +134,94 @@ screens = [
     Screen(
         top=bar.Bar(
             [
-                widget.Sep(linewidth=0,padding=6, foreground=colors[2], background=colors[0]),
+                widget.Sep(
+                    linewidth=0,
+                    padding=6, 
+                    foreground=colors[2], 
+                    background=colors[0]
+                    ),
                 widget.GroupBox(
-                         fontsize = 9,
-                         margin_y = 3,
-                         margin_x = 0,
-                         padding_y = 5,
-                         padding_x = 3,
-                         borderwidth = 3,
-                         active = colors[2],
-                         inactive = colors[7],
-                         rounded = False,
-                         highlight_color = colors[1],
-                         highlight_method = "line",
-                         this_current_screen_border = colors[6],
-                         this_screen_border = colors [4],
-                         other_current_screen_border = colors[6],
-                         other_screen_border = colors[4],
-                         foreground = colors[2],
-                         background = colors[0]
-                         ),
-                widget.Sep(linewidth=0,padding=6, foreground=colors[0], background=colors[0]),
-                widget.TextBox(text = '|', background=colors[0],foreground='474747'),
-                widget.Sep(linewidth=0,padding=6, foreground=colors[0], background=colors[0]),
+                    fontsize = 9,
+                    margin_y = 3,
+                    margin_x = 0,
+                    padding_y = 5,
+                    padding_x = 3,
+                    borderwidth = 3,
+                    active = colors[2],
+                    inactive = colors[7],
+                    rounded = False,
+                    highlight_color = colors[1],
+                    highlight_method = "line",
+                    this_current_screen_border = colors[6],
+                    this_screen_border = colors [4],
+                    other_current_screen_border = colors[6],
+                    other_screen_border = colors[4],
+                    foreground = colors[2],
+                    background = colors[0]
+                    ),
+                widget.Sep(
+                    linewidth=0,
+                    padding=6, 
+                    foreground=colors[0], 
+                    background=colors[0]
+                    ),
+                widget.TextBox(
+                    text = '|', 
+                    background=colors[0],
+                    foreground='474747'
+                    ),
+                widget.Sep(
+                    linewidth=0,
+                    padding=6, 
+                    foreground=colors[0], 
+                    background=colors[0]
+                    ),
                 
-                widget.WindowName(foreground=colors[6],background=colors[0]),
+                widget.WindowName(
+                    foreground=colors[6],
+                    background=colors[0]
+                    ),
 
-                widget.TextBox(text='\ue0b2',background=colors[0],foreground=colors[8],padding=0,fontsize=30),
-                widget.CurrentLayoutIcon(background=colors[8],padding=0,scale=0.7),
-                widget.CurrentLayout(foreground='000000',background=colors[8],padding=0,scale=0.7),
+                widget.TextBox(
+                    text='\ue0b2',
+                    background=colors[0],
+                    foreground=colors[8],
+                    padding=0,
+                    fontsize=30
+                    ),
+                widget.CurrentLayoutIcon(
+                    background=colors[8],
+                    padding=0,
+                    scale=0.7
+                    ),
+                widget.CurrentLayout(
+                    foreground='000000',
+                    background=colors[8],
+                    padding=0,
+                    scale=0.7
+                    ),
 
-                widget.TextBox(text='\ue0b2',background=colors[8],foreground=colors[9],padding=0,fontsize=30),
-                widget.Clock(foreground='000000', background=colors[9], format = "%d-%m-%y %H:%M"),
+                widget.TextBox(
+                    text='\ue0b2',
+                    background=colors[8],
+                    foreground=colors[9],
+                    padding=0,
+                    fontsize=30
+                    ),
+                widget.Clock(
+                    foreground='000000', 
+                    background=colors[9], 
+                    format = "%d-%m-%y %H:%M"
+                    ),
                 #widget.Sep(linewidth=0,padding=6,foreground=colors[0],background=colors[0]),
 
             ],
-            24,
+            28,
             # border_width=[2, 0, 2, 0],  # Draw top and bottom borders
             # border_color=["ff00ff", "000000", "ff00ff", "000000"]  # Borders are magenta
         ),
+        wallpaper="~/wallpaper.jpg",
+        wallpaper_mode="fill"
     ),
 ]
 
@@ -212,7 +261,7 @@ def cleanup():
 @hook.subscribe.shutdown
 def killall():
     shutil.rmtree(os.path.expanduser('~/.config/qtile/__pycache__'))
-    subprocess.Popen(['killall','kitty'])
+    subprocess.Popen(['killall','kitty','picom'])
 
 @hook.subscribe.startup_once
 def start_once():
