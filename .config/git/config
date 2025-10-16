@@ -1,0 +1,5 @@
+[user]
+	email = d4s3@d4s3.xyz
+	name = d4s3
+[core]
+	editor = nvim

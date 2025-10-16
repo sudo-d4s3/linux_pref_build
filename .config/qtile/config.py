@@ -31,7 +31,7 @@ from libqtile.lazy import lazy
 
 mod = "mod4"
 alt = "mod1"
-terminal = "kitty"
+terminal = "alacritty"
 
 keys = [
     # A list of available commands that can be bound to keys can be found
@@ -188,11 +188,6 @@ screens = [
                     foreground=colors[8],
                     padding=0,
                     fontsize=30
-                    ),
-                widget.CurrentLayoutIcon(
-                    background=colors[8],
-                    padding=0,
-                    scale=0.7
                     ),
                 widget.CurrentLayout(
                     foreground='000000',

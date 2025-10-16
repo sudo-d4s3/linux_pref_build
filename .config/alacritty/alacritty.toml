@@ -1,0 +1,17 @@
+window.opacity = 1.0
+
+[font]
+size = 12
+
+[font.normal]
+family = "FiraCode"
+style = "Regular"
+
+[general]
+live_config_reload = true
+import = ["alacritty-theme/sonokai.toml"]
+
+[terminal]
+
+[terminal.shell]
+program = "/bin/zsh"

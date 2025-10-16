@@ -13,3 +13,16 @@ alias ...='pushd ../..'
 
 # making wget a bit more xdg compliant
 alias wget='wget --hsts-file="$XDG_CACHE_HOME/wget-hsts"'
+
+# modern unix replacements
+alias ll='eza \
+	-laah \
+	--mounts \
+	--binary \
+	--git \
+	--git-repos \
+	--icons \
+	--time-style=long-iso \
+	--octal-permissions \
+	--hyperlink \
+	--color=auto'
