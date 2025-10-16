@@ -8,6 +8,7 @@ dep-arch:
 		fuzzel 			\
 		mako 			\
 		waybar 			\
+		otf-font-awesome	\
 		xdg-desktop-portal-gtk 	\
 		swaybg 			\
 		swayidle 		\
