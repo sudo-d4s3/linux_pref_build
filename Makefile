@@ -18,6 +18,7 @@ dep-arch:
 		qtile 			\
 		python-pywlroots 	\
 		eza 			\
+		otf-monaspace-nerdfonts	\
 		bat 			\
 		ripgrep 		\
 		fzf 			\
@@ -34,4 +35,5 @@ dep-arch:
 		pipewire-pulse 		\
 		pipewire-alsa 		\
 		wireplumber 		\
-		gnome-themes-extra
+		gnome-themes-extra	\
+		man-db

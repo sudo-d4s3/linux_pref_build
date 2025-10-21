@@ -1,0 +1,7 @@
+require("plugin_config.telescope")
+require("plugin_config.lspconfig")
+require("plugin_config.treesitter")
+require("plugin_config.luasnip")
+--require("plugin_config.cmp")
+require("plugin_config.go")
+require("plugin_config.obsidian")
