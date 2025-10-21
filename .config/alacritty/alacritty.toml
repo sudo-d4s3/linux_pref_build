@@ -9,7 +9,7 @@ style = "Regular"
 
 [general]
 live_config_reload = true
-import = ["alacritty-theme/sonokai.toml"]
+import = ["alacritty-theme/themes/sonokai.toml"]
 
 [terminal]
 
