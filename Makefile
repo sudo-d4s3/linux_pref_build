@@ -17,6 +17,7 @@ dep-arch:
 		udiskie 		\
 		qtile 			\
 		python-pywlroots 	\
+		nwg-look		\
 		eza 			\
 		otf-monaspace-nerdfonts	\
 		bat 			\
