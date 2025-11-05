@@ -14,15 +14,6 @@ Plug('hrsh7th/nvim-cmp')
 Plug('saadparwaiz1/cmp_luasnip')
 Plug('rafamadriz/friendly-snippets')
 
--- language server python
-Plug('pappasam/jedi-language-server')
-
--- linter python
-Plug('psf/black', {branch = 'stable'})
-
--- bunch 'o go helpers: linter, auto import, language server, etc
-Plug('ray-x/go.nvim')
-
 -- fuzzy finder
 Plug('nvim-lua/plenary.nvim')
 Plug('nvim-telescope/telescope.nvim')
@@ -36,6 +27,17 @@ Plug('nvim-tree/nvim-web-devicons')
 
 -- obisian vault for neovim
 -- Plug('epwalsh/obsidian.nvim')
+
+-- python stuffz
+Plug('pappasam/jedi-language-server') -- language server
+Plug('psf/black', {branch = 'stable'}) -- linter
+
+-- bunch 'o go helpers: linter, auto import, language server, etc
+Plug('ray-x/go.nvim')
+
+-- yaml stuffz
+-- Plug('someone-stole-my-name/yaml-companion.nvim')
+
 vim.call('plug#end')
 
 
