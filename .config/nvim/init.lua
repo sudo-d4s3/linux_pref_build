@@ -27,6 +27,10 @@ Plug('ray-x/go.nvim')
 Plug('nvim-lua/plenary.nvim')
 Plug('nvim-telescope/telescope.nvim')
 
+-- powerline alt
+Plug('nvim-lualine/lualine.nvim')
+Plug('nvim-tree/nvim-web-devicons')
+
 -- Render Markdown in neovim
 -- Plug('MeanderingProgrammer/render-markdown.nvim')
 
