@@ -40,15 +40,20 @@ vim.call('plug#end')
 
 
 vim.filetype.add({
-  extension = {notes = 'markdown'}
+  extension = {notes = 'markdown'},
+  extension = {tofu = 'terraform'}
 })
 
 require('plugin_config')
 
 
-vim.cmd("set nu")
-vim.cmd("set rnu")
-vim.cmd("set foldlevelstart=20")
+vim.opt.number = true
+vim.opt.relativenumber = true
+vim.opt.foldlevelstart = 20
+vim.opt.showmode = false -- lualine shows this already
+vim.opt.cursorline = true
+vim.opt.scrolloff = 3
+vim.opt.confirm = true
 
 vim.opt.conceallevel = 1 -- for obsidian.nvim
 
