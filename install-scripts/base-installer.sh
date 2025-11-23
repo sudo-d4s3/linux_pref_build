@@ -1,0 +1,73 @@
+#!/bin/bash
+set -e 
+
+DISK='/dev/sda'
+BOOT_PART="${DISK}1"
+ZFS_PART="${DISK}2"
+ZFS_PASS="thisisN0Tasecurepassword!"
+
+echo "Adding ArchZFS repo"
+cat >> /etc/pacman.conf << EOF
+[archzfs]
+SigLevel = Required
+Server = https://github.com/archzfs/archzfs/releases/download/experimental
+EOF
+
+echo "Importing ArchZFS GPG Keys"
+pacman-key --init
+pacman-key --recv-keys 3A9917BF0DED5C13F69AC68FABEC0A1208037BE9
+pacman-key --lsign-key 3A9917BF0DED5C13F69AC68FABEC0A1208037BE9
+
+echo "Updating pacman cache"
+pacman -Syy
+
+echo "Installing ZFS packages"
+pacman -Syy archzfs-dkms --noconfirm
+
+echo "Partitioning $DISK"
+parted -s "$DISK" mklabel gpt
+parted -s "$DISK" mkpart primary fat32 1MiB 512MiB
+parted -s "$DISK" set 1 esp on
+parted -s "$DISK" mkpart primary 512MiB 100%
+
+echo "Formatting $BOOT_PART"
+mkfs.fat -F32 "$BOOT_PART"
+
+echo "Loading ZFS kernel modual"
+modprobe zfs
+
+echo "Creating encrypted ZFS pool"
+echo "$ZFS_PASSPHRASE" | zpool create -f \
+	-o ashift=12 \
+	-O acltype=posixacl \
+	-O compression=lz4 \
+	-O dnodesize=auto \
+	-O normalization=formD \
+	-O relatime=on \
+	-O xattr=sa \
+	-O encryption=aes-256-gcm \
+	-O keylocation=prompt \
+	-O keyformat=passphrase \
+	-O mountpoint=none \
+	zroot "$ZFS_PART"
+
+echo "Creating ZFS Datasets"
+zfs create -o mountpoint=none zroot/data
+zfs create -o mountpoint=none zroot/ROOT
+zfs create -o mountpoint=/ -o canmount=noauto zroot/ROOT/default
+zfs create -o mountpoint=/home -o exec=off -o setuid=off -o devices=off zroot/data/home
+zfs create -o mountpoint=/tmp -o exec=off -o setuid=off -o devices=off zroot/data/tmp
+zfs create -o mountpoint=/var -o setuid=off zroot/data/var
+zfs create -o mountpoint=/var/log -o exec=off -o setuid=off -o devices=off zroot/data/var-log
+
+echo "Mounting ZFS pool to /mnt"
+zpool set bootfs=zroot/ROOT/default zroot
+zpool export zroot
+echo "$ZFS_PASS" | zpool import -d /dev/disk/by-id -R /mnt/ zroot
+zfs mount zroot/ROOT/default
+
+echo "Mounting Boot partition to /mnt/boot"
+mkdir -p /mnt/boot
+mount "$BOOT_PART" /mnt/boot
+
+
