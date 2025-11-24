@@ -88,8 +88,18 @@ mkdir -p /mnt/boot
 mount "$BOOT_PART" /mnt/boot
 
 echo "Installing Base Packages"
-pacstrap -K /mnt 	\
-	base 		
+pacstrap -K /mnt		\
+	base 			\
+	base-devel		\
+        devtools		\
+	linux-hardened 		\
+	linux-hardened-headers 	\
+	grub			\
+	efibootmgr
+
 
 echo "Writing FSTAB"
 genfstab -U /mnt | grep -v "zroot" >> /mnt/etc/fstab
+
+echo "Copying pacman.conf"
+cp /etc/pacman.conf /mnt/etc/pacman.conf
