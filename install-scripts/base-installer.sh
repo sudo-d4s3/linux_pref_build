@@ -104,6 +104,7 @@ genfstab -U /mnt | grep -v "zroot" >> /mnt/etc/fstab
 echo "proc /proc proc nosuid,nodev,noexec,hidepid=2,gid=proc 0 0" >> /mnt/etc/fstab
 
 echo "Allowing systemd-logind to view other user's processes"
+mkdir -p /mnt/etc/systemd/system/systemd-logind.service.d
 cat > /mnt/etc/systemd/system/systemd-logind.service.d/hidepid.conf << EOF
 [Service]
 SupplementaryGroups=proc

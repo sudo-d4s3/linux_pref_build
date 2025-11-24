@@ -80,5 +80,5 @@ mkinitcpio -P
 
 echo "Generating GRUB Conf"
 grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
-sed -i "s/^GRUB_CMDLINE_LINUX_DEFAULT.*/GRUB_CMDLINE_LINUX_DEFAULT=${GRUB_CMDLINE_LINUX_DEFAULT}/" /etc/default/grub
+sed -i "s/^GRUB_CMDLINE_LINUX_DEFAULT.*/GRUB_CMDLINE_LINUX_DEFAULT=\"${GRUB_CMDLINE_LINUX_DEFAULT}\"/" /etc/default/grub
 grub-mkconfig -o /boot/grub/grub.cfg
