@@ -5,10 +5,11 @@ set -e
 DISK='/dev/sda'
 BOOT_PART="${DISK}1"
 ZFS_PART="${DISK}2"
-ZFS_PASS="thisisN0Tasecurepassword!"
+ZFS_PASS='thisisN0Tasecurepassword!'
 ENV_DISK_SIZE="4G"
 
 # Script Vars
+ARCHZFS_GPG_KEY=3A9917BF0DED5C13F69AC68FABEC0A1208037BE9
 KERNEL_VERSION=$(uname -r | sed 's/-/./')
 KERNEL_HEADER_PKG="linux-headers-${KERNEL_VERSION}-x86_64.pkg.tar.zst"
 KERNEL_HEADER_PKG_URL="https://archive.archlinux.org/packages/l/linux-headers/${KERNEL_HEADER_PKG}"
@@ -22,8 +23,8 @@ EOF
 
 echo "Importing ArchZFS GPG Keys"
 pacman-key --init
-pacman-key --recv-keys 3A9917BF0DED5C13F69AC68FABEC0A1208037BE9
-pacman-key --lsign-key 3A9917BF0DED5C13F69AC68FABEC0A1208037BE9
+pacman-key --recv-keys $ARCHZFS_GPG_KEY
+pacman-key --lsign-key $ARCHZFS_GPG_KEY
 
 echo "Updating pacman cache"
 pacman -Syy
@@ -32,12 +33,12 @@ echo "Expanding Live Environment Space"
 mount -o remount,size=$ENV_DISK_SIZE /run/archiso/cowspace
 
 echo "Installing Live Environment Dependencies"
-pacman -S curl tar zstd --noconfirm
+pacman -S curl tar zstd --noconfirm --needed
 curl $KERNEL_HEADER_PKG_URL -o $KERNEL_HEADER_PKG
-pacman -U $KERNEL_HEADER_PKG
+pacman -U $KERNEL_HEADER_PKG --noconfirm --needed
 
 echo "Installing ZFS packages"
-pacman -Syy archzfs-dkms --noconfirm
+pacman -S archzfs-dkms --noconfirm --needed
 
 echo "Partitioning $DISK"
 parted -s "$DISK" mklabel gpt
@@ -52,7 +53,7 @@ echo "Loading ZFS kernel modual"
 modprobe zfs
 
 echo "Creating encrypted ZFS pool"
-echo "$ZFS_PASSPHRASE" | zpool create -f \
+echo "$ZFS_PASS" | zpool create -f \
 	-o ashift=12 \
 	-O acltype=posixacl \
 	-O compression=lz4 \
@@ -84,5 +85,3 @@ zfs mount zroot/ROOT/default
 echo "Mounting Boot partition to /mnt/boot"
 mkdir -p /mnt/boot
 mount "$BOOT_PART" /mnt/boot
-
-
