@@ -97,6 +97,11 @@ pacstrap -K /mnt		\
 	grub			\
 	efibootmgr		\
 	archzfs-dkms		\
+	kbd			\
+	microcode		\
+	networkmanager		\
+	selinux			\
+	firewalld
 
 
 echo "Writing FSTAB"
@@ -116,3 +121,6 @@ cp /etc/pacman.conf /mnt/etc/pacman.conf
 echo "Entering chroot"
 cp chroot-inject.sh /mnt
 arch-chroot /mnt /chroot-inject.sh
+
+echo "Cleanup"
+rm /mnt/chroot-inject.sh
