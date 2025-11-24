@@ -80,6 +80,7 @@ echo "Mounting ZFS pool to /mnt"
 zpool set bootfs=zroot/ROOT/default zroot
 zpool export zroot
 echo "$ZFS_PASS" | zpool import -d /dev/disk/by-id -R /mnt/ zroot
+echo "$ZFS_PASS" | zfs load-key zroot
 zfs mount zroot/ROOT/default
 
 echo "Mounting Boot partition to /mnt/boot"
