@@ -1,10 +1,17 @@
 #!/bin/bash
 set -e 
 
+# User Vars
 DISK='/dev/sda'
 BOOT_PART="${DISK}1"
 ZFS_PART="${DISK}2"
 ZFS_PASS="thisisN0Tasecurepassword!"
+ENV_DISK_SIZE="4G"
+
+# Script Vars
+KERNEL_VERSION=$(uname -r | sed 's/-/./')
+KERNEL_HEADER_PKG="linux-headers-${KERNEL_VERSION}-x86_64.pkg.tar.zst"
+KERNEL_HEADER_PKG_URL="https://archive.archlinux.org/packages/l/linux-headers/${KERNEL_HEADER_PKG}"
 
 echo "Adding ArchZFS repo"
 cat >> /etc/pacman.conf << EOF
@@ -20,6 +27,14 @@ pacman-key --lsign-key 3A9917BF0DED5C13F69AC68FABEC0A1208037BE9
 
 echo "Updating pacman cache"
 pacman -Syy
+
+echo "Expanding Live Environment Space"
+mount -o remount,size=$ENV_DISK_SIZE /run/archiso/cowspace
+
+echo "Installing Live Environment Dependencies"
+pacman -S curl tar zstd --noconfirm
+curl $KERNEL_HEADER_PKG_URL -o $KERNEL_HEADER_PKG
+pacman -U $KERNEL_HEADER_PKG
 
 echo "Installing ZFS packages"
 pacman -Syy archzfs-dkms --noconfirm
