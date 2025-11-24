@@ -21,7 +21,7 @@ locale-gen
 echo "LANG=en_US.UTF-8" > /etc/locale.conf
 
 echo "Setting Keyboard Layout"
-localectlset-keymap $KEYBOARD_LAYOUT
+localectl set-keymap $KEYBOARD_LAYOUT
 
 echo "Setting Hostname"
 echo $HOSTNAME > /etc/hostname
@@ -62,11 +62,11 @@ EOF
 
 echo "Creating Admin's Account"
 useradd -G wheel,adm admin
-passwd admin $ADMIN_PASS
+echo "$ADMIN_PASS" | passwd --stdin admin
 
 echo "Creating $USERNAME's Account"
 useradd -m $USERNAME
-passwd $USERNAME $USER_PASS
+echo "$ADMIN_PASS" | passwd --stdin $USERNAME
 
 echo "Hardening Filepaths"
 chmod 700 /home/$USERNAME
