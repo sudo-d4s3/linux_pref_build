@@ -115,4 +115,4 @@ cp /etc/pacman.conf /mnt/etc/pacman.conf
 
 echo "Entering chroot"
 cp chroot-inject.sh /mnt
-arch-chroot /mnt chroot-inject.sh
+arch-chroot /mnt /chroot-inject.sh
