@@ -95,11 +95,23 @@ pacstrap -K /mnt		\
 	linux-hardened 		\
 	linux-hardened-headers 	\
 	grub			\
-	efibootmgr
+	efibootmgr		\
+	archzfs-dkms		\
 
 
 echo "Writing FSTAB"
 genfstab -U /mnt | grep -v "zroot" >> /mnt/etc/fstab
+echo "proc /proc proc nosuid,nodev,noexec,hidepid=2,gid=proc 0 0" >> /mnt/etc/fstab
+
+echo "Allowing systemd-logind to view other user's processes"
+cat > /mnt/etc/systemd/system/systemd-logind.service.d/hidepid.conf << EOF
+[Service]
+SupplementaryGroups=proc
+EOF
 
 echo "Copying pacman.conf"
 cp /etc/pacman.conf /mnt/etc/pacman.conf
+
+echo "Entering chroot"
+cp chroot-inject.sh /mnt
+arch-chroot /mnt chroot-inject.sh
