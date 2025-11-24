@@ -21,6 +21,13 @@ SigLevel = Required
 Server = https://github.com/archzfs/archzfs/releases/download/experimental
 EOF
 
+echo "Adding SELinux repo"
+cat >> /etc/pacman.conf << EOF
+[selinux]
+SigLevel = Never
+Server = https://github.com/archlinuxhardened/selinux/releases/download/ArchLinux-SELinux
+EOF
+
 echo "Importing ArchZFS GPG Keys"
 pacman-key --init
 pacman-key --recv-keys $ARCHZFS_GPG_KEY
@@ -89,7 +96,7 @@ mount "$BOOT_PART" /mnt/boot
 
 echo "Installing Base Packages"
 pacstrap -K /mnt		\
-	base 			\
+	base-selinux		\
 	base-devel		\
         devtools		\
 	linux-hardened 		\
@@ -98,9 +105,9 @@ pacstrap -K /mnt		\
 	efibootmgr		\
 	archzfs-dkms		\
 	kbd			\
-	microcode		\
+	amd-ucode		\
+	intel-ucode		\
 	networkmanager		\
-	selinux			\
 	firewalld
 
 
