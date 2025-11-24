@@ -53,18 +53,18 @@ echo "Loading ZFS kernel modual"
 modprobe zfs
 
 echo "Creating encrypted ZFS pool"
-echo "$ZFS_PASS" | zpool create -f \
-	-o ashift=12 \
-	-O acltype=posixacl \
-	-O compression=lz4 \
-	-O dnodesize=auto \
-	-O normalization=formD \
-	-O relatime=on \
-	-O xattr=sa \
-	-O encryption=aes-256-gcm \
-	-O keylocation=prompt \
-	-O keyformat=passphrase \
-	-O mountpoint=none \
+echo "$ZFS_PASS" | zpool create -f 	\
+	-o ashift=12 			\
+	-O acltype=posixacl 		\
+	-O compression=lz4 		\
+	-O dnodesize=auto 		\
+	-O normalization=formD 		\
+	-O relatime=on 			\
+	-O xattr=sa 			\
+	-O encryption=aes-256-gcm 	\
+	-O keylocation=prompt 		\
+	-O keyformat=passphrase 	\
+	-O mountpoint=none 		\
 	zroot "$ZFS_PART"
 
 echo "Creating ZFS Datasets"
@@ -86,3 +86,10 @@ zfs mount zroot/ROOT/default
 echo "Mounting Boot partition to /mnt/boot"
 mkdir -p /mnt/boot
 mount "$BOOT_PART" /mnt/boot
+
+echo "Installing Base Packages"
+pacstrap -K /mnt 	\
+	base 		
+
+echo "Writing FSTAB"
+genfstab -U /mnt | grep -v "zroot" >> /mnt/etc/fstab
