@@ -104,10 +104,14 @@ pacstrap -K /mnt		\
 	grub			\
 	efibootmgr		\
 	archzfs-dkms		\
+	libpwquality		\
 	kbd			\
 	amd-ucode		\
 	intel-ucode		\
 	networkmanager		\
+	curl			\
+	tar			\
+	zstd			\
 	firewalld
 
 

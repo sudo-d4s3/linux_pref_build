@@ -35,7 +35,7 @@ pacman-key --recv-keys $ARCHZFS_GPG_KEY
 pacman-key --lsign-key $ARCHZFS_GPG_KEY
 
 echo "Setting ZFS cachefile"
-zpool set cachefile=/etc/zfs/zpool.cache zroot
+#zpool set cachefile=/etc/zfs/zpool.cache zroot
 
 echo "Enabling ZFS Services"
 systemctl enable zfs-import-cache.service
