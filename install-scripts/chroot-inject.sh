@@ -133,7 +133,7 @@ install btusb /bin/false
 EOF
 
 echo "Updating mikinitcpio for ZFS"
-sed -i 's/^HOOKS=.*/HOOKS=(base udev autodetect microcode modconf kms keyboard keymap consolefont numlock block zfs filesystems)/' /etc/mkinitcpio.conf
+sed -i 's/^HOOKS=.*/HOOKS=(base udev autodetect microcode modconf kms keyboard keymap consolefont block zfs filesystems)/' /etc/mkinitcpio.conf
 sed -i 's/^MODULES=.*/MODULES=(zfs)/' /etc/mkinitcpio.conf
 mkinitcpio -P
 
