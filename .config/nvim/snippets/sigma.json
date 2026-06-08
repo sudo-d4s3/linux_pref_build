@@ -1,0 +1,31 @@
+{
+  "Sigma Rule": {
+    "scope": "yaml",
+    "prefix": "sigma",
+    "body": [
+      "title: ${1:Rule Title}",
+      "id: ${UUID}",
+      "status: ${3|experimental,test,stable|}",
+      "description: ${4:Description of the detection}",
+      "references:",
+      "    - ${5:https://example.com}",
+      "author: ${6:Your Name}",
+      "date: ${7:${CURRENT_YEAR}/${CURRENT_MONTH}/${CURRENT_DATE}}",
+      "tags:",
+      "    - attack.${8:execution}",
+      "    - ${9:tag}",
+      "logsource:",
+      "    category: ${10:process_creation}",
+      "    product: ${11:windows}",
+      "    service: ${12:}",
+      "detection:",
+      "    selection:",
+      "        ${13:Field|value}: ${14:value}",
+      "    condition: selection",
+      "falsepositives:",
+      "    - ${15:Known benign activity}",
+      "level: ${16|informational,low,medium,high,critical|}"
+    ],
+    "description": "Sigma detection rule template"
+  }
+}

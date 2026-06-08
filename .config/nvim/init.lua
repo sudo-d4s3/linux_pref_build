@@ -1,64 +1,61 @@
-local vim = vim
-local Plug = vim.fn['plug#']
+vim.g.mapleader = "\\"
+vim.g.maplocalleader = "\\"
 
-vim.call('plug#begin')
--- Theme
-Plug('sainnhe/sonokai')
+require("config.options")
 
--- lsp + snippets + autocomplete
-Plug('nvim-treesitter/nvim-treesitter', {['do'] = vim.fn[':TSUpdate']})
-Plug('neovim/nvim-lspconfig')
-Plug('L3MON4D3/LuaSnip', {['tag'] = 'v2.*', ['do'] = 'make install_jsregexp'})
-Plug('hrsh7th/cmp-nvim-lsp')
-Plug('hrsh7th/nvim-cmp')
-Plug('saadparwaiz1/cmp_luasnip')
-Plug('rafamadriz/friendly-snippets')
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.uv.fs_stat(lazypath) then
+  vim.fn.system({
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable",
+    lazypath,
+  })
+end
+vim.opt.rtp:prepend(lazypath)
 
--- fuzzy finder
-Plug('nvim-lua/plenary.nvim')
-Plug('nvim-telescope/telescope.nvim')
+--vim.api.nvim_create_autocmd("User", {
+--  pattern = "LazyDone",
+--  once = true,
+--  callback = function()
+--    require("config.lsp_enable")
+--    require("config.diagnostics")
+--    require("config.keymaps")
+--  end,
+--})
 
--- powerline alt
-Plug('nvim-lualine/lualine.nvim')
-Plug('nvim-tree/nvim-web-devicons')
-
--- Render Markdown in neovim
--- Plug('MeanderingProgrammer/render-markdown.nvim')
-
--- obisian vault for neovim
--- Plug('epwalsh/obsidian.nvim')
-
--- python stuffz
-Plug('pappasam/jedi-language-server') -- language server
-Plug('psf/black', {branch = 'stable'}) -- linter
-
--- bunch 'o go helpers: linter, auto import, language server, etc
-Plug('ray-x/go.nvim')
-
--- yaml stuffz
--- Plug('someone-stole-my-name/yaml-companion.nvim')
-
-vim.call('plug#end')
-
-
-vim.filetype.add({
-  extension = {notes = 'markdown'},
-  extension = {tofu = 'terraform'}
+require("lazy").setup({
+  spec = {
+    { import = "plugins" },
+  },
+  install = {
+    colorscheme = { "habamax" },
+  },
 })
 
-require('plugin_config')
+vim.api.nvim_create_autocmd("BufWritePre", {
+  callback = function(args)
+    if not vim.api.nvim_get_option_value("modifiable", { buf = args.buf }) then
+      return
+    end
+    if vim.api.nvim_get_option_value("buftype", { buf = args.buf }) ~= "" then
+      return
+    end
+    local ok_conform = pcall(require, "conform")
+    if not ok_conform then
+      return
+    end
+    require("conform").format({
+      bufnr = args.buf,
+      timeout_ms = 5000,
+      lsp_fallback = true,
+      async = false,
+    })
+  end,
+})
 
-
-vim.opt.number = true
-vim.opt.relativenumber = true
-vim.opt.foldlevelstart = 20
-vim.opt.showmode = false -- lualine shows this already
-vim.opt.cursorline = true
-vim.opt.scrolloff = 3
-vim.opt.confirm = true
-
-vim.opt.conceallevel = 1 -- for obsidian.nvim
-
-vim.cmd("let g:sonokai_style = 'default'")
-vim.cmd("let g:sonokai_better_performance = 1")
-vim.cmd.colorscheme("sonokai")
+require("config.lsp_enable")
+require("config.diagnostics")
+require("config.keymaps")
