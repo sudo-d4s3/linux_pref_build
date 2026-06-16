@@ -7,6 +7,7 @@
 [tag]
 	sort = version:refname
 [diff]
+	external = difft
 	algorithm = histogram
 	colorMoved = plain
 	mnemonicPrefix = true
@@ -37,3 +38,10 @@
 [user]
 	name = D4S3
 	email = d4s3@d4s3.xyz
+[merge "mergiraf"]
+	name = mergiraf
+	driver = mergiraf merge --git %O %A %B -s %S -x %X -y %Y -p %P -l %L
+[alias]
+    dlog = -c diff.external=difft log --ext-diff
+    dshow = -c diff.external=difft show --ext-diff
+    ddiff = -c diff.external=difft diff
