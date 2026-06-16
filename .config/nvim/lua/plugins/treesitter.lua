@@ -8,24 +8,25 @@ local parsers = {
   "toml",
   "markdown",
   "query",
+  "bash",
+  "terraform",
 }
 
 return {
   {
-    "nvim-treesitter/nvim-treesitter",
-    branch = "master",
+    "neovim-treesitter/nvim-treesitter",
+    dependencies = { "neovim-treesitter/treesitter-parser-registry" },
     lazy = false,
     build = ":TSUpdate",
     config = function()
-      vim.schedule(function()
-        require("nvim-treesitter.configs").setup({
-          sync_install = false,
-          ensure_installed = parsers,
-          auto_install = false,
-          highlight = { enable = true },
-          incremental_selection = { enable = true },
-        })
-      end)
+      require("nvim-treesitter").setup()
+      require("nvim-treesitter").install(parsers)
+
+      vim.api.nvim_create_autocmd("FileType", {
+        callback = function()
+          pcall(vim.treesitter.start)
+        end,
+      })
     end,
   },
 }
