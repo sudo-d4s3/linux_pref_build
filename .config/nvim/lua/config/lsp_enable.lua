@@ -2,6 +2,7 @@ vim.lsp.enable({
 	"zubanls",
 	"gopls",
 	"rust_analyzer",
+	"rsigma",
 	"rlsp-yaml",
 	"terraform-ls",
 	"docker_language_server",
