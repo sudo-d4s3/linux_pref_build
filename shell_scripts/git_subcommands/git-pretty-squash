@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+TARGET="${1:-main}"
+TMPMSG="$(mktemp)"
+
+uvx --from commitizen cz commit --dry-run --write-message-to-file "$TMPMSG"
+
+git log --reverse --format="- %h %s" "$TARGET"..HEAD >/tmp/squashed-commits.txt
+
+git reset --soft "$(git merge-base "$TARGET" HEAD)"
+
+
+{
+    echo
+    echo
+    echo "Squashed commits:"
+    cat /tmp/squashed-commits.txt
+} >> "$TMPMSG" 
+
+git commit --template="$TMPMSG"
